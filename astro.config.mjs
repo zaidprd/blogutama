@@ -6,13 +6,14 @@ import starlight from "@astrojs/starlight";
 import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
 import cloudflare from "@astrojs/cloudflare";
+import { staticImageService } from "astro/config"; // ✅ perbaikan image.service
 
 export default defineConfig({
   site: "https://screwfast.uk",
 
-  // ✅ Astro v5 image config (tanpa import manual)
+  // ✅ image service pakai object, bukan string
   image: {
-    service: "astro/assets/services/static",
+    service: staticImageService(),
     domains: ["images.unsplash.com", "cdn.sanity.io"],
   },
 
