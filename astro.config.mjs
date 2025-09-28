@@ -5,24 +5,17 @@ import compressor from "astro-compressor";
 import starlight from "@astrojs/starlight";
 import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
-
-// 🚀 Cloudflare adaptor
 import cloudflare from "@astrojs/cloudflare";
 
-// 🚀 Image service untuk Astro v5
-import { staticImageService } from "astro/assets/services/static";
-
-// https://astro.build/config
 export default defineConfig({
   site: "https://screwfast.uk",
 
-  // ✅ Image config Astro v5
+  // ✅ Astro v5 image config (tanpa import manual)
   image: {
-    service: staticImageService(),
+    service: "astro/assets/services/static",
     domains: ["images.unsplash.com", "cdn.sanity.io"],
   },
 
-  // ✅ Cloudflare deployment
   output: "server",
   adapter: cloudflare({
     mode: "directory",
@@ -44,10 +37,7 @@ export default defineConfig({
     starlight({
       title: "ScrewFast Docs",
       locales: {
-        root: {
-          label: "English",
-          lang: "en",
-        },
+        root: { label: "English", lang: "en" },
         de: { label: "Deutsch", lang: "de" },
         es: { label: "Español", lang: "es" },
         fa: { label: "Persian", lang: "fa", dir: "rtl" },
