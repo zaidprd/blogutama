@@ -28,14 +28,14 @@ if (!post || !post.slug) {
 <div class="grid gap-8 sm:grid-cols-2 sm:items-center">
     <div class="sm:order-2">
     <div class="relative rounded-lg pt-[50%] sm:pt-[100%]">
-      {/* Mengganti tag Image dengan tag <img> */}
+      
       {imageSrc && (
         <img
           class="absolute start-0 top-0 size-full rounded-xl object-cover"
           src={imageSrc}
           alt={imageAlt}
-          draggable={"false"}
-          loading={"eager"}
+          draggable="false" // <--- Disederhanakan
+          loading="eager" // <--- Disederhanakan
           width={800}
           height={800}
         />
@@ -51,7 +51,7 @@ if (!post || !post.slug) {
         class="outline-hidden ring-zinc-500 transition duration-300 hover:text-orange-400 focus-visible:ring-3 dark:text-neutral-300 dark:ring-zinc-200 dark:hover:text-neutral-50 dark:focus:outline-hidden"
         href={url}
       >
-        {post.title} {/* Menggunakan post.title */}
+        {post.title} 
       </a>
     </h2>
     
@@ -66,10 +66,10 @@ if (!post || !post.slug) {
 
       <div class="ms-3 sm:ms-4">
         <p class="font-bold text-neutral-800 dark:text-neutral-200 sm:mb-1">
-          {post.authorName} {/* Menggunakan post.authorName */}
+          {post.authorName} 
         </p>
         <p class="text-xs text-neutral-500">
-          {post.readTime || 5} min read {/* PERBAIKAN: Mengganti post.role dengan post.readTime atau default 5 */}
+          {post.readTime || 5} min read
         </p>
       </div>
     </div>
