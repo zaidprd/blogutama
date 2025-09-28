@@ -1,54 +1,35 @@
 ---
-// src/components/ui/cards/CardRelated.astro
-
-// Import necessary modules and utilities
-// MENGHAPUS: import { Image } from "astro:assets";
-// MENGHAPUS: import type { CollectionEntry } from "astro:content";
-
 import { formatDate } from "@utils/utils";
-import type { SanityPost } from "@lib/sanity"; // Import SanityPost
+import type { SanityPost } from "@lib/sanity";
 
-// MENGGANTI prop: blogEntry menjadi post (sesuai SanityPost)
 interface Props {
-  post: SanityPost;
-  // Properti recentBlogLocale dipertahankan jika Anda masih menggunakannya di tempat lain
-  recentBlogLocale?: string; 
+  posts?: SanityPost[];
 }
 
-const { post, recentBlogLocale = "" } = Astro.props;
-
-// Definisikan variabel URL berdasarkan slug Sanity
-const url = `/blog/${post.slug}`;
-const imageSrc = post.cardImage || '';
-const imageAlt = post.cardImageAlt || post.title;
+const { posts = [] } = Astro.props;
 ---
 
-<a
-  class="group block rounded-xl outline-hidden ring-zinc-500 transition duration-300 focus-visible:ring-3 dark:ring-zinc-200 dark:focus:outline-hidden"
-    href={url}
-  data-astro-prefetch
->
-  <div>
-    
-        {imageSrc && (
-     <img
-  class="aspect-video rounded-xl object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-  src={imageSrc}
-  alt={imageAlt}
-  draggable={false}   <!-- ✅ pakai boolean -->
-  width={540}
-  height={300}
-/>
-    )}
-    
-        <h3
-      class="mt-2 text-balance text-lg font-medium text-neutral-800 group-hover:text-orange-400 dark:text-neutral-300 dark:group-hover:text-neutral-50"
-    >
-      {post.title}
-    </h3>
-    
-        <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
-      {formatDate(new Date(post.pubDate))}
-    </p>
-  </div>
-</a>
+<div class="grid gap-6">
+  {posts.length > 0 && posts.map((post) => (
+    <a
+      href={`/blog/${post.slug}`}
+      class="block rounded-xl transition hover:scale-105 focus-visible:ring-2"
+      data-astro-prefetch
+    >
+      {post.cardImage && (
+        <img
+          src={post.cardImage}
+          alt={post.cardImageAlt || post.title}
+          class="aspect-video w-full rounded-xl object-cover"
+          draggable={false}
+          width={540}
+          height={300}
+        />
+      )}
+      <h3 class="mt-2 text-lg font-semibold">{post.title}</h3>
+      <p class="text-sm text-neutral-500">
+        {formatDate(new Date(post.pubDate))}
+      </p>
+    </a>
+  ))}
+</div>
