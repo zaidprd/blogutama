@@ -1,22 +1,48 @@
 ---
-// Import necessary components
-import { Image } from "astro:assets";
+// src/components/ui/avatars/AvatarBlogLarge.astro
+// Diperbaiki untuk mengatasi kesalahan sintaksis kondisional
 
-import type { CollectionEntry } from "astro:content";
+// MENGHAPUS: import { Image } from "astro:assets"; // Pastikan ini sudah dihapus
+// MENGHAPUS: import type { CollectionEntry } from "astro:content"; // Pastikan ini sudah dihapus
 
-const { blogEntry } = Astro.props;
+import type { SanityPost } from "@lib/sanity"; 
+import { formatDate } from "@utils/utils"; // Pertahankan utilitas jika digunakan di sini
 
 interface Props {
-  blogEntry: CollectionEntry<"blog">;
+  post: SanityPost; 
 }
+
+const { post } = Astro.props;
+
+// Mengambil data author
+const authorImage = post.authorImage || '';
+const authorImageAlt = post.authorImageAlt || post.authorName;
 ---
 
-<div class="shrink-0">
-  <Image
-    class="size-10 rounded-full sm:h-14 sm:w-14"
-    src={blogEntry.data.authorImage}
-    alt={blogEntry.data.authorImageAlt}
-    draggable={"false"}
-    format={"avif"}
-  />
+<div class="flex items-center">
+        <div class="shrink-0">
+        {authorImage ? (
+            <img
+                class="size-[64px] rounded-full border-2 border-neutral-50 object-cover"
+                src={authorImage}
+                alt={authorImageAlt}
+                draggable={"false"}
+                width={64} 
+                height={64}
+            />
+        ) : (
+            <div class="size-[64px] rounded-full border-2 border-neutral-50 bg-neutral-300 flex items-center justify-center text-xl font-semibold text-neutral-600">
+                {post.authorName.charAt(0)}
+            </div>
+        )}
+    </div>
+
+        <div class="ms-4">
+        <h4 class="font-bold text-neutral-50 dark:text-neutral-50">
+            {post.authorName}
+        </h4>
+        <p class="text-sm text-neutral-50/[.8] dark:text-neutral-300/[.8]">
+            {formatDate(new Date(post.pubDate))}
+        </p>
+    </div>
 </div>

@@ -1,22 +1,32 @@
 ---
-// Import necessary components
-import { Image } from "astro:assets";
+// src/components/ui/avatars/AvatarBlog.astro
 
-import type { CollectionEntry } from "astro:content";
-
-const { blogEntry } = Astro.props;
+import type { SanityPost } from "@lib/sanity"; 
 
 interface Props {
-  blogEntry: CollectionEntry<"blog">;
+  post: SanityPost; 
 }
+
+const { post } = Astro.props;
+
+// Mengambil data author
+const authorImage = post.authorImage || '';
+const authorImageAlt = post.authorImageAlt || post.authorName;
 ---
 
 <div class="shrink-0">
-  <Image
-    class="size-[46px] rounded-full border-2 border-neutral-50"
-    src={blogEntry.data.authorImage}
-    alt={blogEntry.data.authorImageAlt}
-    draggable={"false"}
-    format={"avif"}
-  />
+  {authorImage ? (
+    <img
+      class="size-[46px] rounded-full border-2 border-neutral-50 object-cover"
+      src={authorImage}
+      alt={authorImageAlt}
+      draggable={"false"}
+      width={46} 
+      height={46}
+    />
+  ) : (
+    <div class="size-[46px] rounded-full border-2 border-neutral-50 bg-neutral-300 flex items-center justify-center text-sm font-semibold text-neutral-600">
+      {post.authorName.charAt(0)}
+    </div>
+  )}
 </div>

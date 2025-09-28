@@ -1,41 +1,54 @@
 ---
+// src/components/ui/cards/CardRelated.astro
+
 // Import necessary modules and utilities
-import { Image } from "astro:assets";
+// MENGHAPUS: import { Image } from "astro:assets";
+// MENGHAPUS: import type { CollectionEntry } from "astro:content";
+
 import { formatDate } from "@utils/utils";
-import type { CollectionEntry } from "astro:content";
+import type { SanityPost } from "@lib/sanity"; // Import SanityPost
 
-const { blogEntry, recentBlogLocale = "" } = Astro.props;
-
+// MENGGANTI prop: blogEntry menjadi post (sesuai SanityPost)
 interface Props {
-  blogEntry: CollectionEntry<"blog">;
-  recentBlogLocale?: string;
+  post: SanityPost;
+  // Properti recentBlogLocale dipertahankan jika Anda masih menggunakannya di tempat lain
+  recentBlogLocale?: string; 
 }
+
+const { post, recentBlogLocale = "" } = Astro.props;
+
+// Definisikan variabel URL berdasarkan slug Sanity
+const url = `/blog/${post.slug}`;
+const imageSrc = post.cardImage || '';
+const imageAlt = post.cardImageAlt || post.title;
 ---
 
 <a
-  class="group block rounded-xl outline-hidden ring-zinc-500 transition duration-300 focus-visible:ring-3 dark:ring-zinc-200 dark:focus:outline-hidden"
-  href={recentBlogLocale && recentBlogLocale !== "en"
-    ? `/${recentBlogLocale}/blog/${blogEntry.id.replace(/^fr\//, "")}/`
-    : `/blog/${blogEntry.id.replace(/^en\//, "")}/`}
-  data-astro-prefetch
+  class="group block rounded-xl outline-hidden ring-zinc-500 transition duration-300 focus-visible:ring-3 dark:ring-zinc-200 dark:focus:outline-hidden"
+    href={url}
+  data-astro-prefetch
 >
-  <div>
-    <Image
-      class="aspect-video rounded-xl"
-      src={blogEntry.data.cardImage}
-      alt={blogEntry.data.cardImageAlt}
-      draggable={"false"}
-      format={"avif"}
-    />
-    <!-- The title of the blog post -->
-    <h3
-      class="mt-2 text-balance text-lg font-medium text-neutral-800 group-hover:text-orange-400 dark:text-neutral-300 dark:group-hover:text-neutral-50"
-    >
-      {blogEntry.data.title}
-    </h3>
-    <!-- The formatted publication date of the blog post -->
-    <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
-      {formatDate(blogEntry.data.pubDate)}
-    </p>
-  </div></a
->
+  <div>
+    
+        {imageSrc && (
+      <img
+        class="aspect-video rounded-xl object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+        src={imageSrc}
+        alt={imageAlt}
+        draggable={"false"}
+        width={540} /* Tambahkan width dan height */
+        height={300}
+      />
+    )}
+    
+        <h3
+      class="mt-2 text-balance text-lg font-medium text-neutral-800 group-hover:text-orange-400 dark:text-neutral-300 dark:group-hover:text-neutral-50"
+    >
+      {post.title}
+    </h3>
+    
+        <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+      {formatDate(new Date(post.pubDate))}
+    </p>
+  </div>
+</a>

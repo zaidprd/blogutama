@@ -1,0 +1,178 @@
+---
+// Import necessary components and utilities
+import MainLayout from "@/layouts/MainLayout.astro";
+import AvatarBlogLarge from "@components/ui/avatars/AvatarBlogLarge.astro";
+import CardRelated from "@components/ui/cards/CardRelated.astro";
+import Bookmark from "@components/ui/buttons/Bookmark.astro";
+import SocialShare from "@components/ui/buttons/SocialShare.astro";
+import PostFeedback from "@components/ui/feedback/PostFeedback.astro";
+import { capitalize, formatDate } from "@utils/utils";
+
+// Mengimpor fungsi spesifik dari Sanity
+import { getPostAndRelated, getAllPostSlugs, type SanityPost } from '@/lib/sanity';
+import { SITE } from "@data/constants";
+
+// 👇 PERBAIKAN 1: Impor komponen Portable Text Renderer
+import SanityContentRenderer from "@components/SanityContentRenderer.jsx"; 
+
+// -------------------------------------------------------------
+// 1. getStaticPaths: Mengambil semua slug dari Sanity
+// -------------------------------------------------------------
+export async function getStaticPaths() {
+  const slugs = await getAllPostSlugs();
+  return slugs.map(entry => ({
+    params: { slug: entry.slug },
+  }));
+}
+
+// -------------------------------------------------------------
+// 2. Mengambil data post berdasarkan slug
+// -------------------------------------------------------------
+const { slug } = Astro.params;
+const { post, relatedPosts } = await getPostAndRelated(slug);
+
+// Jika post tidak ditemukan (404)
+if (!post) {
+    return Astro.redirect('/404', 404);
+}
+
+// -------------------------------------------------------------
+// 3. Variabel Halaman (Menggunakan data Sanity)
+// -------------------------------------------------------------
+const pageTitle: string = `${post.title} | ${SITE.title}`;
+const metaDescription: string = post.excerpt || `Read ${post.title} on ScrewFast's blog`; 
+const ogTitle = `${post.title} | Blog | ${SITE.title}`;
+// Hapus `postContent` simulasi karena kita akan menggunakan post.body secara langsung.
+---
+
+<MainLayout
+  title={pageTitle}
+  customDescription={metaDescription}
+  customOgTitle={ogTitle}
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    // Menggunakan URL Sanity
+    image: post.imageUrl,
+    datePublished: post.pubDate,
+    author: {
+      "@type": "Person",
+      name: post.authorName,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE.title,
+      logo: {
+        "@type": "ImageObject",
+        url: "https://screwfast.uk/favicon.ico",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://screwfast.uk/blog/${post.slug}`,
+    },
+  }}
+>
+  <section class="mx-auto max-w-3xl px-4 pt-6 pb-12 sm:px-6 lg:px-8 lg:pt-10">
+    <div class="max-w-2xl">
+      <div class="mb-6 flex items-center justify-between">
+        <div class="flex w-full gap-x-5 sm:items-center sm:gap-x-3">
+          <AvatarBlogLarge post={post} />
+          <div class="grow">
+            <div class="flex items-center justify-between gap-x-2">
+              <div>
+                <span class="font-bold text-neutral-700 dark:text-neutral-300">
+                  {post.authorName}
+                </span>
+                <ul class="text-xs text-neutral-500">
+                  <li
+                    class="relative inline-block pe-6 before:absolute before:end-2 before:top-1/2 before:size-1 before:-translate-y-1/2 before:rounded-full before:bg-neutral-300 last:pe-0 last-of-type:before:hidden dark:text-neutral-400 dark:before:bg-neutral-600"
+                  >
+                    {formatDate(new Date(post.pubDate))}
+                  </li>
+                  <li
+                    class="relative inline-block pe-6 before:absolute before:end-2 before:top-1/2 before:size-1 before:-translate-y-1/2 before:rounded-full before:bg-neutral-300 last:pe-0 last-of-type:before:hidden dark:text-neutral-400 dark:before:bg-neutral-600"
+                  >
+                    {post.readTime || 5} min read
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Blog post title */}
+      <h2
+        class="mb-3 text-2xl font-bold text-neutral-800 md:text-3xl dark:text-neutral-200"
+      >
+        {post.title}
+      </h2>
+      
+      {/* 👇 PERBAIKAN 2: Render Gambar Utama sebelum konten Portable Text */}
+      {post.imageUrl && (
+        <img
+          class="w-full rounded-xl object-cover mb-8"
+          src={post.imageUrl}
+          alt={post.imageAlt || post.title}
+          draggable={"false"}
+          width={1200}
+          height={675}
+        />
+      )}
+      
+      {/* 👇 PERBAIKAN 3: Ganti simulasi konten dengan Portable Text Renderer */}
+      <div class="mb-5 space-y-5 md:mb-8 md:space-y-8">
+        {/* 🛑 GUNAKAN KOMPONEN REACT DENGAN DIREKTIF KLIEN 🛑 */}
+        {post.body && <SanityContentRenderer body={post.body} client:load />}
+      </div>
+      
+      <div
+        class="mx-auto grid max-w-[--breakpoint-lg] gap-y-5 sm:flex sm:items-center sm:justify-between sm:gap-y-0"
+      >
+        <div
+          class="flex flex-wrap gap-x-2 gap-y-1 sm:flex-nowrap sm:items-center sm:gap-y-0"
+        >
+          {
+            post.tags?.map((tag: string) => (
+              <span class="inline-flex items-center gap-x-1.5 rounded-lg bg-neutral-400/30 px-3 py-1.5 text-xs font-medium text-neutral-700 outline-hidden focus:outline-hidden focus-visible:ring-3 focus-visible:outline-hidden dark:bg-neutral-700/60 dark:text-neutral-300">
+                {capitalize(tag)}
+              </span>
+            ))
+          }
+        </div>
+        {/* Bookmark and Share buttons */}
+        <div class="flex items-center justify-end gap-x-1.5">
+          <Bookmark />
+          <div
+            class="mx-3 block h-4 border-e border-neutral-400 dark:border-neutral-500"
+          >
+          </div>
+          <div class="inline-flex">
+            <SocialShare pageTitle={post.title} />
+          </div>
+        </div>
+      </div>
+    </div>
+    <PostFeedback
+      title="Was this post helpful?"
+      firstChoice="Yes"
+      secondChoice="No"
+    />
+  </section>
+
+  {/* Related articles section */}
+  <section class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <div class="mb-10 max-w-2xl">
+      <h2
+        class="text-2xl font-bold text-balance text-neutral-800 md:text-4xl md:leading-tight dark:text-neutral-200"
+      >
+        Related articles
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+      {relatedPosts.map((post) => <CardRelated post={post} />)}
+    </div>
+  </section>
+</MainLayout>
