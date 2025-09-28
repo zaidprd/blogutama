@@ -31,14 +31,14 @@ const imageAlt = post.cardImageAlt || post.title;
   <div>
     
         {imageSrc && (
-      <img
-        class="aspect-video rounded-xl object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-        src={imageSrc}
-        alt={imageAlt}
-        draggable={"false"}
-        width={540} /* Tambahkan width dan height */
-        height={300}
-      />
+     <img
+  class="aspect-video rounded-xl object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+  src={imageSrc}
+  alt={imageAlt}
+  draggable={false}   <!-- ✅ pakai boolean -->
+  width={540}
+  height={300}
+/>
     )}
     
         <h3
