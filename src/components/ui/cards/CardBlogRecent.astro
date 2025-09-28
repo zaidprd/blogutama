@@ -1,84 +1,20 @@
-// src/components/ui/cards/CardBlogRecent.astro
-
-// Import sudah disesuaikan untuk Sanity
-import { formatDate } from "@utils/utils";
-import type { SanityPost } from "@lib/sanity";
-import AvatarBlogLarge from "@components/ui/avatars/AvatarBlogLarge.astro";
-import PrimaryCTA from "@components/ui/buttons/PrimaryCTA.astro";
-
-// Mengganti CollectionEntry<"blog"> dengan SanityPost
-interface Props {
-  post: SanityPost; // Ganti blogEntry menjadi post
-  recentBlogLocale?: string;
-}
-
-const { post, recentBlogLocale = "" } = Astro.props;
-
-// Definisikan variabel URL dan Gambar menggunakan properti Sanity
-const url = `/blog/${post.slug}`;
-const imageSrc = post.cardImage || post.imageUrl || ''; 
-const imageAlt = post.cardImageAlt || post.imageAlt || post.title;
-
-// Pencegahan error jika data kosong (untuk keamanan)
-if (!post || !post.slug) {
-    return null;
-}
+---
+// Ini adalah kode bypass sementara untuk menguji parser Astro.
+// Semua logic dan props asli telah dihapus untuk mengisolasi error "parser panic".
 ---
 
-<div class="grid gap-8 sm:grid-cols-2 sm:items-center">
-    <div class="sm:order-2">
-    <div class="relative rounded-lg pt-[50%] sm:pt-[100%]">
-      
-      {imageSrc && (
-        <img
-          class="absolute start-0 top-0 size-full rounded-xl object-cover"
-          src={imageSrc}
-          alt={imageAlt}
-          draggable="false"
-          loading="eager"
-          width={800}
-          height={800}
-        />
-      )}
-    </div>
-</div>
-  
-    <div class="sm:order-1">
-        <h2
-      class="text-balance text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200 md:text-3xl lg:text-4xl lg:leading-tight xl:text-5xl xl:leading-tight"
-    >
-      <a
-        class="outline-hidden ring-zinc-500 transition duration-300 hover:text-orange-400 focus-visible:ring-3 dark:text-neutral-300 dark:ring-zinc-200 dark:hover:text-neutral-50 dark:focus:outline-hidden"
-        href={url}
-      >
-        {post.title} 
-      </a>
-    </h2>
-    
-    {/* Kutipan (Excerpt) */}
-    <p class="mt-4 text-pretty text-neutral-600 dark:text-neutral-400">
-        {post.excerpt}
-    </p>
-
-        <div class="mt-6 flex items-center sm:mt-10">
-      {/* Mengganti blogEntry={blogEntry} menjadi post={post} */}
-      <AvatarBlogLarge post={post} /> 
-
-      <div class="ms-3 sm:ms-4">
-        <p class="font-bold text-neutral-800 dark:text-neutral-200 sm:mb-1">
-          {post.authorName} 
-        </p>
-        <p class="text-xs text-neutral-500">
-          {post.readTime || 5} min read
-        </p>
-      </div>
-    </div>
-        <div class="mt-5">
-      <PrimaryCTA
-        url={url}
-        title="Read More"
-        data-astro-prefetch
-      />
-    </div>
-  </div>
+<div style="
+    padding: 20px;
+    border: 3px solid red;
+    background-color: #ffcccc;
+    color: black;
+    text-align: center;
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 8px;
+    font-family: sans-serif;
+">
+    <h1>[BYPASS BERHASIL]</h1>
+    <p>Jika build ini **berhasil**, masalahnya 100% ada pada sintaks HTML/Astro di komponen CardBlogRecent sebelumnya.</p>
+    <p>Silakan kembalikan kode asli secara bertahap!</p>
 </div>
