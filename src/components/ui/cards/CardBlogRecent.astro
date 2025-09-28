@@ -1,4 +1,3 @@
----
 // src/components/ui/cards/CardBlogRecent.astro
 
 // Import sudah disesuaikan untuk Sanity
@@ -22,7 +21,7 @@ const imageAlt = post.cardImageAlt || post.imageAlt || post.title;
 
 // Pencegahan error jika data kosong (untuk keamanan)
 if (!post || !post.slug) {
-    return null;
+    return null;
 }
 ---
 
@@ -55,11 +54,11 @@ if (!post || !post.slug) {
         {post.title} {/* Menggunakan post.title */}
       </a>
     </h2>
-    
-    {/* Kutipan (Excerpt) */}
-    <p class="mt-4 text-pretty text-neutral-600 dark:text-neutral-400">
-        {post.excerpt}
-    </p>
+    
+    {/* Kutipan (Excerpt) */}
+    <p class="mt-4 text-pretty text-neutral-600 dark:text-neutral-400">
+        {post.excerpt}
+    </p>
 
         <div class="mt-6 flex items-center sm:mt-10">
       {/* Mengganti blogEntry={blogEntry} menjadi post={post} */}
@@ -70,7 +69,7 @@ if (!post || !post.slug) {
           {post.authorName} {/* Menggunakan post.authorName */}
         </p>
         <p class="text-xs text-neutral-500">
-          {post.role} {/* Menggunakan post.role (jika ada) */}
+          {post.readTime || 5} min read {/* PERBAIKAN: Mengganti post.role dengan post.readTime atau default 5 */}
         </p>
       </div>
     </div>
