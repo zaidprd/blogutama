@@ -20,7 +20,7 @@
     "@portabletext/to-html": "^3.0.0",
     "@sanity/client": "^7.11.2",
     "@sanity/image-url": "^1.2.0",
-    "@tailwindcss/vite": "^4.1.13",
+    "@tailwindcss/vite": "^4.1.14",
     "astro": "5.13.0",               
     "astro-compressor": "^1.1.2",
     "clipboard": "^2.0.11",
